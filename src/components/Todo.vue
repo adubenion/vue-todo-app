@@ -43,8 +43,8 @@
 		},
 		methods: {
 			getTask: function() {
-				var user = localStorage.getItem("todo_app")
-				axios.get('http://localhost:3000/api/todo/', {headers: {'token':localStorage.getItem('todo_app')}})
+				var user = this.$cookies.get("todo_app")
+				axios.get('http://localhost:3000/api/todo/', {headers: {'token':this.$cookies.get('todo_app')}})
 				.then(response => {
 					return response.data
 				}).then(data => {
@@ -57,11 +57,11 @@
 				axios.post('http://localhost:3000/api/create_todo/', {
 					description: this.newTask, 
 					completed: false,
-					user: localStorage.getItem("todo_app")
+					user: this.$cookies.get("todo_app")
 				},
 				{
 					headers: {
-						token: localStorage.getItem('todo_app')
+						token: this.$cookies.get('todo_app')
 					}
 				})
 				.then(response => {
@@ -80,7 +80,7 @@
 				},
 				{
 					headers: {
-						token: localStorage.getItem('todo_app')
+						token: this.$cookies.get('todo_app')
 					}
 				})
 				.then(response => {
@@ -95,7 +95,7 @@
 				axios.delete('http://localhost:3000/api/delete_todo/', {
 					data: {
 						_id: id,
-						token: localStorage.getItem('todo_app')
+						token: this.$cookies.get('todo_app')
 					}
 				})
 				.then(response => {

@@ -6,10 +6,10 @@ ObjectId = require('mongodb').ObjectID;
 bodyparser = require('body-parser'),
 cors = require('cors'),
 jwt = require('jsonwebtoken'),
-secret = process.env.SECRET_KEY,
+secret = String(process.env.SECRET_KEY),
 cookieParser = require('cookie-parser'),
 bcrypt = require('bcrypt'),
-saltRounds = process.env.SALT_WORK_FACTOR;
+saltRounds = Number(process.env.SALT_WORK_FACTOR);
 
 
 var app = express()
@@ -69,7 +69,7 @@ app.post('/api/create_todo/', (req, res, next) => {
 		}
 	})
 })
-app.put('/api/update_todo/', (req, res) => {
+app.put('/api/update_todo/', (req, res,next) => {
 	var token = req.cookies.todo_app;
 	var id = req.body._id;
 	var completed = req.body.completed;
@@ -81,7 +81,7 @@ app.put('/api/update_todo/', (req, res) => {
 		}
 	})
 })
-app.delete('/api/delete_todo/', (req, res) => {
+app.delete('/api/delete_todo/', (req, res,next) => {
 	var token = req.cookies.todo_app;
 	id = req.body._id;
 	jwt.verify(token, secret, (err, decodedToken) => {
@@ -118,6 +118,61 @@ UserSchema.pre('save', function(next) {
 })
 var User = mongoose.model('User', UserSchema);
 
+var FriendSchema = new Schema({
+	user: {
+		type: Schema.Types.ObjectId
+	},
+	friendUsername: {
+		type: String,
+		required: true
+	},
+	requestAccepted: {
+		type: Boolean,
+		required: true
+	}
+})
+var Friend = mongoose.model('Friend', FriendSchema)
+
+var GroupSchema = new Schema({
+	name: {
+		type: String,
+		required: true,
+		trime: true
+	},
+	isPrivate: {
+		type: Boolean,
+		required: true
+	},
+	associatedUsers: {
+		type: Array
+	}
+})
+var Group = mongoose.model('Group', GroupSchema)
+
+var MessageSchema = new Schema({
+	to: {
+		type: String,
+		required: true
+	},
+	from: {
+		type: Schema.Types.ObjectId,
+		required: true
+	},
+	subject: {
+		type: String,
+		required: true
+	},
+	body: {
+		type: String,
+		required: true
+	},
+	read: {
+		type: Boolean,
+		required: true
+	}
+})
+var Message = mongoose.model('Message', MessageSchema)
+
 app.post('/login/do', (req,res,next) => {
 	var userData = {
 		username: req.body.username
@@ -147,6 +202,17 @@ app.post('/api/create_user', (req,res,next) => {
 	} else {
 		next()
 	}
+})
+app.get('/api/search_users/', (req,res,next) => {
+	var token = req.cookies.todo_app;
+	id = req.body._id;
+	jwt.verify(token, secret, (err, decodedToken) => {
+		if (!err) {
+			User.find({username: new RegExp(`${req.headers.search}`)}, (err, result) => {if (!err){res.send(result)}else{next(err)}})
+		} else {
+			next(err)
+		}
+	})
 })
 app.put('/api/update_user:id', (req,res) => {
 	res.send('<h1>Updating user...</h1>')

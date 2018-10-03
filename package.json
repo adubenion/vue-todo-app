@@ -10,18 +10,20 @@
     "db": "mongod --port 3030 --dbpath ./src/config/db/"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bcrypt": "^3.0.1",
+    "body-parser": "^1.18.3",
     "bulma": "^0.7.1",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
     "dotenv": "^6.0.0",
+    "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "mongodb": "^3.1.6",
     "mongoose": "^5.3.0",
     "vue": "^2.5.16",
-    "vue-router": "^3.0.1",
-    "body-parser": "^1.18.3",
-    "cors": "^2.8.4",
-    "express": "^4.16.3"
+    "vue-cookies": "^1.5.7",
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0-rc.10",

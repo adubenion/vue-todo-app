@@ -4,6 +4,10 @@ import VueCookies from 'vue-cookies'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import SignUp from './views/SignUp.vue'
+import Todos from './views/Todos.vue'
+import Friends from './views/Friends.vue'
+import Groups from './views/Groups.vue'
+import Messages from './views/Messages.vue'
 import axios from 'axios';
 axios.defaults.withCredentials = true
 
@@ -27,6 +31,38 @@ Vue.use(VueCookies)
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+    },
+    {
+      path: '/todos',
+      name: 'todos',
+      component: Todos,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/friends',
+      name: 'friends',
+      component: Friends,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/groups',
+      name: 'groups',
+      component: Groups,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/messages',
+      name: 'messages',
+      component: Messages,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/login',

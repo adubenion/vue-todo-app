@@ -1,6 +1,6 @@
 <template>
   <div>
-  	<Todo />
+  	<h1>Dashboard</h1>
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 import Todo from '@/components/Todo.vue';
 
 export default {
-  name: 'home',
+  name: 'dashboard',
   components: {
     Todo
   }
