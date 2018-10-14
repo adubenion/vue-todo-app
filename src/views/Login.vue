@@ -45,7 +45,7 @@
 		name: 'Login',
 		props: {
 			loggedIn: Boolean,
-			user: String
+			currentUser: String
 		},
 		data() {
 			return{
@@ -63,11 +63,12 @@
 						username: this.username,
 						password: this.password
 					}).then(response => {
-						return response.data.data
+						console.log(response)
+						return response.data
 					}).then(data => {
 						if (data !== null) {
 							this.$cookies.set('todo_app', `${data.token}`, '1H')
-							this.username = data.user.username
+							this.username = this.username
 							this.$emit('welcome', this.username)
 							this.message = true
 							this.$emit('login', this.message)

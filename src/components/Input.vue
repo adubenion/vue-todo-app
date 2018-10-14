@@ -5,7 +5,7 @@
 				Please enter a new ToDo 
 				<div class="field is-grouped">
 					<input id="input "class="input is-medium" :value="newTask" @input="handleInput()" @keyup.enter="addTask()"/>
-					<button class="button is-info is is-medium" v-on:click="addTask()">Add</button>	
+					<button class="button is-info is is-medium" v-on:click="addTask()">ADD</button>	
 				</div>
 			</label>
 		</div>

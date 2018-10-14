@@ -6,12 +6,14 @@
 	          <ul v-for="task in incompleteTasks" :key="task._id">
 							<div class="card">
 								<div class="card-content">
-									<input class="checkbox is-right" type="checkbox" v-on:click="updateTask(task._id, task.completed)" v-model="task.completed"> 
-										<li>
-										<p class="subtitle">{{ task.description }}</p>
-										</li>
-									<input class="button is-danger" type="button" value="DELETE" v-on:click="deleteTask(task._id)">
+									<li>
+									<p class="subtitle">{{ task.description }}</p>
+									</li>
 								</div>
+		            <footer class="card-footer">
+		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" v-model="task.completed">Completed</a>
+		              <a class="card-footer-item" @click="deleteTask(task._id)">Delete</a>
+		            </footer>
 							</div>
 	          </ul>
 					</div>
@@ -23,12 +25,14 @@
 	          <ul v-for="task in completedTasks" :key="task._id">
 							<div class="card">
 								<div class="card-content">
-										<input class="checkbox" type="checkbox" v-model="task.completed" v-on:click="updateTask(task._id, task.completed)">
-										<li>
-										<p class="subtitle">{{ task.description }} </p>
-										</li>
-									<input class="button is-info" type="button" value="DONE" v-on:click="deleteTask(task._id)">
+									<li>
+									<p class="subtitle">{{ task.description }} </p>
+									</li>
 								</div>
+		            <footer class="card-footer">
+		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" v-model="task.completed">Do Again</a>
+		              <a class="card-footer-item" @click="deleteTask(task._id)">Delete</a>
+		            </footer>
 							</div>
 	          </ul>
 					</div>

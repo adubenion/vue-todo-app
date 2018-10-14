@@ -56,8 +56,7 @@
 			addTask: function() {
 				axios.post('http://localhost:3000/api/create_todo/', {
 					description: this.newTask, 
-					completed: false,
-					user: this.$cookies.get("todo_app")
+					completed: false
 				},
 				{
 					headers: {
