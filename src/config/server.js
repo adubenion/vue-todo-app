@@ -468,7 +468,7 @@ app.post('/login/do/', (req,res,next) => {
 	}
 	User.findOne(userData, (err, user) => {
 		if (user !== null) {
-			if (bcrypt.compareSync(req.body.password, user.password)) {
+			if (bcrypt.compareSync(req.body.password, user.password) === true) {
 				var token = jwt.sign({id: user._id, username: user.username}, secret, {expiresIn:'1h'});
 				res.json({status:"success", token:token})
 			} else {

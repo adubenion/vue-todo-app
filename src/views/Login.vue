@@ -66,7 +66,7 @@
 						console.log(response)
 						return response.data
 					}).then(data => {
-						if (data !== null) {
+						if (data !== null && data.status !== 'error') {
 							this.$cookies.set('todo_app', `${data.token}`, '1H')
 							this.username = this.username
 							this.$emit('welcome', this.username)
