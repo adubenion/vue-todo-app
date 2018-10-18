@@ -18,7 +18,7 @@
 	          </ul>
 					</div>
 					<p class="subtitle" v-else>
-						All tasks have been completed!
+						All Group Tasks have been completed! Yay, teamwork!
 					</p>
 					<hr>
 					<div v-if="completedTasks.length">            
@@ -41,7 +41,7 @@
 					<div class="card">
 						<div class="card-content">
 							<li>
-							<p class="subtitle">There are no todos yet</p>
+							<p class="subtitle">There are no Group Todos yet</p>
 							</li>
 						</div>
 					</div>
@@ -53,7 +53,7 @@
 <script>
 
 	export default {
-		name: 'List',
+		name: 'GroupTodoList',
 		props: {
 			tasks: Array,
 			completedTasks: Array,

@@ -85,6 +85,86 @@ app.delete('/api/delete_todo/', (req, res,next) => {
 		}
 	})
 })
+app.get('/api/group_todo/:group', (req, res, next) => {
+	var token = req.cookies.todo_app;
+	var groupName = req.params.group;
+	var id ;
+	jwt.verify(token, secret, (err, decodedToken) => {
+		if (!err) {
+			Group.findOne({name: groupName}, (err, result) => {
+				if (!err) {
+					id = result._id
+					Todo.find({user: new ObjectId(id)}, (err, result) => {if (!err){res.send(result)}else{next(err)}})
+				} else {
+					res.json({error: 'Group ' + groupName + ' Not Found'})
+				}
+			})
+		} else {
+			next(err)
+		}
+	})
+})
+app.post('/api/create_group_todo/:group', (req, res, next) => {
+	var token = req.cookies.todo_app;
+	var groupName = req.params.group
+	var id;
+	jwt.verify(token, secret, (err, decodedToken) => {
+		if (!err) {
+			Group.findOne({name: groupName}, (err, result) => {
+				if (!err) {
+					id = result._id
+					var todo ={
+						description: req.body.description,
+						completed: req.body.completed,
+						user: id
+					}
+					Todo.create(todo, (err, result) => {if (!err){res.send(result)}else{next(err)}})
+				} else {
+					res.json({error: 'Group ' + groupName + ' Not Found'})
+				}
+			})
+		} else {
+			next(err)
+		}
+	})
+})
+app.put('/api/update_group_todo/:group', (req, res,next) => {
+	var token = req.cookies.todo_app;
+	var id = req.body._id;
+	var groupName = req.params.group;
+	var completed = req.body.completed;
+	jwt.verify(token, secret, (err, decodedToken) => {
+		if (!err) {
+			Group.findOne({name: groupName}, (err, result) => {
+				if (!err) {
+					Todo.findOneAndUpdate({_id: new ObjectId(id)}, {$set: {completed: completed}}, (err, result) => {if (!err){res.send(result)}else{next(err)}})
+				} else {
+					res.json({error: 'Group ' + groupName + ' Not Found'})
+				}
+			})
+		} else {
+			next(err)
+		}
+	})
+})
+app.delete('/api/delete_group_todo/:group', (req, res,next) => {
+	var token = req.cookies.todo_app;
+	var groupName = req.params.group;
+	id = req.body._id;
+	jwt.verify(token, secret, (err, decodedToken) => {
+		if (!err) {
+			Group.findOne({name: groupName}, (err, result) => {
+				if (!err) {
+					Todo.findOneAndDelete({_id: new ObjectId(id) }, (err, result) => {if (!err){res.send(result)}else{next(err)}})
+				} else {
+					res.json({error: 'Group ' + groupName + ' Not Found'})
+				}
+			})
+		} else {
+			next(err)
+		}
+	})
+})
 
 // USER
 app.get('/api/user/:username/', (req,res,next) => {
@@ -193,7 +273,7 @@ app.put('/api/friends/accept_request/', (req,res,next) => {
 
 						res.json({success: 'request accepted'})
 					} else {
-						res.json({error: err})
+						res.json({error: 'requested action does not match request'})
 					}
 				})
 			} else {
@@ -205,16 +285,16 @@ app.put('/api/friends/accept_request/', (req,res,next) => {
 	})
 })
 app.delete('/api/friends/unfriend/', (req,res,next) => {
-	res.send('<h1>Deleting friend record...</h1>')
+	console.log(req.body)
 	var token = req.cookies.todo_app,
 	action = req.body.action,
-	reqUser = req.body.requestedUser;
+	friendId = req.body._id;
 	jwt.verify(token, secret, (err, decodedToken) => {
 		if (!err) {
-			if (action && action === 'remove') {
-				Friend.findOneAndDelete({$and:[{association: decodedToken.username}, {association: reqUser}]}, (err, result) => {if (!err){res.send(result)}else{next(err)}})
+			if (action && action === 'unfriend') {
+				Friend.findOneAndDelete({_id: new ObjectId(friendId)}, (err, result) => {if (!err){res.send(result)}else{next(err)}})
 			} else {
-				res.json({error: err})
+				res.json({error: 'requested action does not match request'})
 			}
 		} else {
 			next(err)
@@ -254,6 +334,56 @@ app.get('/api/groups/:group/', (req,res,next) => {
 					res.json({error: 'Group page, ' + req.params.group + ' Not Found'})
 				}
 			})
+		} else {
+			next(err)
+		}
+	})
+})
+app.put('/api/groups/join_group/:group', (req,res,next) => {
+	console.log(req.body)
+	var token = req.cookies.todo_app,
+	user = req.body.addedUser,
+	group = req.params.group,
+	action = req.body.action
+	jwt.verify(token, secret, (err, decodedToken) => {
+		if (!err) {
+			if (action && action === 'join group') {
+				Group.findOneAndUpdate({name: group}, {$addToSet: {associatedUsers: user}}, (err, result) => {
+					if (!err) {
+
+						res.json({success: 'joined group'})
+					} else {
+						res.json({error: 'requested action does not match request'})
+					}
+				})
+			} else {
+				res.json({error: err})
+			}
+		} else {
+			next(err)
+		}
+	})
+})
+app.put('/api/groups/leave_group/:group', (req,res,next) => {
+	console.log(req.body)
+	var token = req.cookies.todo_app,
+	user = req.body.removedUser,
+	group = req.params.group,
+	action = req.body.action
+	jwt.verify(token, secret, (err, decodedToken) => {
+		if (!err) {
+			if (action && action === 'leave group') {
+				Group.findOneAndUpdate({name: group}, {$pull: {associatedUsers: user}}, (err, result) => {
+					if (!err) {
+
+						res.json({success: 'removed from group'})
+					} else {
+						res.json({error: 'requested action does not match request'})
+					}
+				})
+			} else {
+				res.json({error: err})
+			}
 		} else {
 			next(err)
 		}
@@ -407,10 +537,10 @@ app.get('/api/dashboard/', (req,res,next) => {
 		}
 	})
 })
-app.get('/api/user_profile/', (req,res,next) => {
+app.get('/api/user_profile/:username', (req,res,next) => {
 	var token = req.cookies.todo_app;
 	id = req.body._id;
-	reqUser = req.body.requestingUser
+	reqUser = req.params.username
 	jwt.verify(token, secret, (err, decodedToken) => {
 		if (!err) {
 			var agg = User.aggregate(

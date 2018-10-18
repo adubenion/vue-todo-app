@@ -1,33 +1,11 @@
 <template>
   <div class="container is-fluid has-text-centered">
     <h1 class="title is-3">{{this.group}}</h1>
-    <div :class="{'is-active': this.nav}" class="dropdown">
-      <div class="dropdown-trigger">
-        <button @click="() => {this.nav = !this.nav}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-          <span>Group Menu</span>
-          <span class="icon is-small">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
-      </div>
-      <div class="dropdown-menu" id="dropdown-menu" role="menu">
-        <div class="dropdown-content">
-          <a v-if="!inGroup" href="#" class="dropdown-item">
-            Join Group
-          </a>
-          <a v-else href="#" class="dropdown-item">
-            Leave Group
-          </a>
-          <a v-show="inGroup" class="dropdown-item">
-            Send Group Message
-          </a>
-          <a v-show="inGroup" class="dropdown-item">
-            Add group task
-          </a>
-        </div>
-      </div>
-    </div>
-    <GroupProfile :currentUser="group" />
+    <GroupProfile 
+    :group="group" 
+    :inGroup="inGroup"
+    :usersInGroup="usersInGroup"
+    :messages="messages" />
   </div>  
 </template>
 
@@ -46,7 +24,9 @@ export default {
   	return {
   		group: '',
       nav: false,
-      inGroup: false
+      inGroup: false,
+      usersInGroup: [],
+      messages: [],
   	}
   },
   mounted() {
@@ -68,13 +48,14 @@ export default {
         return response.data
       })
       .then(data => {
-        data.forEach((i,j,k) => {
-          console.log(i.associatedUsers.indexOf(localStorage.getItem("ta_cu")))
-          if (i.associatedUsers.indexOf(localStorage.getItem("ta_cu")) !== -1) {
-            console.log('grouped')
-            this.inGroup = true
-          }
-        })
+        var associatedUsers = data.filter(i => i.name === this.$route.params.group)
+        console.log(associatedUsers)
+        if (associatedUsers[0].associatedUsers.includes(localStorage.getItem("ta_cu"))) {
+          this.inGroup = true
+          this.usersInGroup = associatedUsers[0].associatedUsers
+        } else {
+          this.inGroup = false
+        }
       })
   	})
   	.catch(e => {
@@ -82,7 +63,7 @@ export default {
       })
   },
   watch: {
-    '$route.params.username': function(un) {
+    '$route.params.username': function(gr) {
     axios.get('http://localhost:3000/api/group/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
       console.log(response)
@@ -90,7 +71,7 @@ export default {
     })
     .then(data => {
       if (data.success) {
-        this.group = un
+        this.group = gr
       } else {
         this.group = data.error
       }

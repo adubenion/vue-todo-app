@@ -1,17 +1,77 @@
 <template>
   <div>
-    <section class="section">
-     <h1 class="title is-4">Info</h1>
-    </section>
+    <div v-show="username.split(' ').includes('Not', 2) === false" :class="{'is-active': this.nav}" class="dropdown">
+      <div class="dropdown-trigger">
+        <button @click="() => {this.nav = !this.nav}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span>Profile Menu</span>
+          <span class="icon is-small">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div v-show="friends === true && friendsPending === false" class="dropdown-content">
+          <a href="#" class="dropdown-item">
+            Unfriend
+          </a>
+          <a class="dropdown-item" @click="() => {this.$router.replace('/messages')}">
+            Send Message
+          </a>
+        </div>
+        <div v-show="friends === false && friendsPending === false" class="dropdown-content">
+          <a  @click="addFriend" class="dropdown-item">
+            Add Friend
+          </a>
+        </div>
+        <div v-show="friends === false && friendsPending === true" class="dropdown-content">
+          <a href="#" class="dropdown-item">
+            Delete Request
+          </a>
+        </div>
+      </div>
+    </div>
     <section v-if="showProfile" class="section">
-      <h1 class="title is-4">Todos</h1>
-      <h1 class="title is-4">Friends</h1>
-      <h1 class="title is-4">Groups</h1>
+      <h1 class="title is-4">Todos for {{this.username}}</h1>
+      <div v-if="incompleteTasks.length" class="card">
+        <div v-for="todo in incompleteTasks" :key="todo._id" class="card-content">
+          <p class="subtitle">{{todo.description}}</p>
+        </div>
+      </div>
+      <div v-else class="card">
+        <div class="card-content">
+          <p class="subtitle">No todos to display. How productive!</p>
+        </div>
+      </div>
+      <h1 class="title is-4">Friends of {{this.username}}</h1>
+      <div v-if="friendsList.length" class="card">
+        <div v-for="friend in userFriends" :key="friend._id" class="card-content">
+          <router-link :to="{name: 'user', params: {username: friend.association.filter(i => i !== username).join('')}}" v-show="friend.requestAccepted === true" class="subtitle">{{friend.association.filter(i => i !== username).join('')}}</router-link>
+        </div>
+      </div>
+      <div v-else class="card">
+        <div class="card-content">
+          <p class="subtitle" @click="() => {this.$router.replace('/friends')}">No friends to display</p>
+        </div>
+      </div>
+        <h1 class="title is-4">Groups for {{this.username}}</h1>
+      <div v-if="groups.length" class="card">
+        <div v-for="group in groups" :key="group._id" class="card-content">
+          <router-link :to="{name: 'group', params: {group: group.name}}" class="subtitle">{{group.name}}</router-link>
+        </div>
+      </div>
+      <div v-else class="card">
+        <div class="card-content">
+          <p class="subtitle">No groups to display.</p>
+        </div>
+      </div>
+    </section>
+    <section v-else-if="username.split(' ').includes('Not', 2) === true">
+      <div></div>
     </section>
     <section v-else class="section">
-      <p class="title is-4">Once {{this.currentUser}} is a friend, you can see their profile! Send them a request!</p>
+      <p class="title is-4">Once {{this.username}} is a friend, you can see their profile! Send them a request!</p>
     </section>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -22,49 +82,35 @@
 export default {
   name: 'userProfile',
   props: {
-    currentUser: String,
+    username: String, 
+    userFriends: Array,
+    groups: Array,
+    todos: Array,
+    showProfile: Boolean,
+    incompleteTasks: Array,
+    friendsList: Array,
     friends: Boolean,
     friendsPending: Boolean
   },
   data() {
     return {
-
+      nav: false
     }
   },
-  mounted() {
-    axios.get('http://localhost:3000/api/user_profile', {headers: {'token':this.$cookies.get('todo_app')}})
-    .then(response => {
-      console.log(response)
-      return response.data
-    })
-    .catch(e => {
-        console.log(e.message)
-    })
-    console.log(this.friends)
-  },
-  computed: {
-    showProfile() {
-      if (this.currentUser === localStorage.getItem("ta_cu")) {
-        return true
-      } else {
-        if (this.friends === true && this.friendsPending === false) {
-          return true
-        } else {
-          return false
+  methods: {
+    addFriend: function() {
+      axios.post('http://localhost:3000/api/friends/send_request/', {
+        action: 'request',
+        requestedUser: this.username
+      },
+      {
+        headers: {
+          token: this.$cookies.get('todo_app')
         }
-      }
-    }
-  },
-  watch: {
-    showProfile(value) {
-      console.log(value)
-      if (value) {
-        this.$forceUpdate()
-        return true
-      } else {
-        this.$forceUpdate()
-        return false
-      }
+      })
+      .then(response => {
+        console.log(response)
+      })
     }
   }
 }

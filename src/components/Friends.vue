@@ -12,7 +12,7 @@
                 <router-link :to="{name: 'user', params: {username: friend.association.filter(x => x !== currentUser).join('')}}" class="subtitle">{{friend.association.filter(x => x !== currentUser).join('')}}</router-link>
             </div>
             <footer class="card-footer">
-              <a class="card-footer-item">Unfriend</a>
+              <a class="card-footer-item" @click="unfriend(friend._id)">Unfriend</a>
             </footer>
           </div>
         </div>
@@ -94,9 +94,11 @@ export default {
     },
     unfriend: function (id) {
       console.log(id)
-      axios.put('http://localhost:3000/api/friends/unfriend/', {
-        _id: id,
-        action: "unfriend"
+      axios.delete('http://localhost:3000/api/friends/unfriend/', {
+        data: { 
+          _id: id, 
+          action: 'unfriend'
+        }
       },
       {headers: {token: this.$cookies.get('todo_app')}})
       .then(response => {
