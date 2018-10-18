@@ -47,9 +47,11 @@
 				axios.get('http://localhost:3000/api/todo/', {headers: {'token':this.$cookies.get('todo_app')}})
 				.then(response => {
 					return response.data
-				}).then(data => {
+				})
+				.then(data => {
 					this.tasks = data
-				}).catch(e => {
+				})
+				.catch(e => {
 					console.log(e.message)
 				})
 			},
@@ -65,10 +67,12 @@
 				})
 				.then(response => {
 					return response.data
-				}).then(data => {
+				})
+				.then(data => {
 					this.newTask = ''
 					return this.getTask()
-				}).catch(e => {
+				})
+				.catch(e => {
 					console.log(e.message)
 				})
 			},
@@ -84,9 +88,11 @@
 				})
 				.then(response => {
 					return response.data
-				}).then(data => {
+				})
+				.then(data => {
 					return this.getTask()
-				}).catch(e => {
+				})
+				.catch(e => {
 					console.log(e.message)
 				})
 			},
@@ -99,9 +105,11 @@
 				})
 				.then(response => {
 					return response.data
-				}).then(data => {
+				})
+				.then(data => {
 					return this.getTask()
-				}).catch(e => {
+				})
+				.catch(e => {
 					console.log(e.message)
 				})
 			}

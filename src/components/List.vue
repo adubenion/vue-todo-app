@@ -40,9 +40,7 @@
 				<div v-else>
 					<div class="card">
 						<div class="card-content">
-							<li>
 							<p class="subtitle">There are no todos yet</p>
-							</li>
 						</div>
 					</div>
 				</div>

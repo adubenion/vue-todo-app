@@ -107,7 +107,7 @@
 			},
 			validateUsername: function() {
 				if (this.username != '') {
-					if (/^\w(?:\w*(?:[.-]\w+)?)*(?<=^.{4,32})$/.test(this.username)) {
+					if (/^\w{4,32}$/.test(this.username)) {
 						return true
 					} else {
 						return false

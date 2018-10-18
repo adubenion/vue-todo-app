@@ -8,7 +8,7 @@
           Group Name
           <div class="field is-grouped">
             <button class="button is-danger" @click="close">X</button>
-            <input class="input" :value="addGroupName" @input="handleInput()" @keyup.enter="addGroupSubmit" placeholder="Please add a name for new group" >
+            <input class="input" :value="addGroupName" @input="handleInput($event)" @keyup.enter="addGroupSubmit" placeholder="Please add a name for new group" >
             <button class="button is-success" @click="addGroupSubmit">Create</button>
             </input>
           </div>
@@ -41,7 +41,7 @@ export default {
       this.$emit('close', !this.addGroupModal)
       this.$emit('input', this.input)
     },
-    handleInput: function() {
+    handleInput: function(event) {
       this.input = event.target.value
       this.$emit('input', this.input)
     },

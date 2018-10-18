@@ -4,7 +4,7 @@
   <div class="modal-content">
 	<div class="field is-grouped">
 		<button class="button is-danger" @click="close()">X</button>
-		<input class="input" :value="searchBar" @input="handleInput()" @keyup.enter="searchUsers" placeholder="Search Users" >
+		<input class="input" :value="searchBar" @input="handleInput($event)" @keyup.enter="searchUsers" placeholder="Search Users" >
 		<a class="button is-success" @click="searchUsers">Search</a>
 		</input>
 	</div>
@@ -79,7 +79,7 @@ export default {
 				this.$emit('nav', nav)
 			}
 		},
-		handleInput: function() {
+		handleInput: function(event) {
 			this.input = event.target.value
 			this.$emit('input', this.input)
 		},
