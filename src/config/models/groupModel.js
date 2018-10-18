@@ -5,7 +5,8 @@ var GroupSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
-		trime: true
+		unique: true,
+		trim: true
 	},
 	isPrivate: {
 		type: Boolean,

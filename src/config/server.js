@@ -339,6 +339,29 @@ app.get('/api/groups/:group/', (req,res,next) => {
 		}
 	})
 })
+app.post('/api/create_group/', (req, res, next) => {
+	var token = req.cookies.todo_app;
+	var groupName = req.body.name
+	var id;
+	jwt.verify(token, secret, (err, decodedToken) => {
+		if (!err) {
+			var group = {
+				name: groupName,
+				isPrivate: true,
+				associatedUsers: [decodedToken.username]
+			}
+			Group.create(group, (err, result) => {
+				if (!err) {
+					res.json({success: 'group created'})
+				} else {
+					res.json({error: err})
+				}
+			})
+		} else {
+			next(err)
+		}
+	})
+})
 app.put('/api/groups/join_group/:group', (req,res,next) => {
 	console.log(req.body)
 	var token = req.cookies.todo_app,
