@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Input :addTask="addTask" :newTask="newTask" @input="newTask = $event"></Input>
+		<Input :addTask="addTask" :newTask="newTask" @input="newTask = $event" />
 		<List 
 		:tasks="tasks" 
 		:completedTasks="completedTasks" 
@@ -43,7 +43,6 @@
 		},
 		methods: {
 			getTask: function() {
-				var user = this.$cookies.get("todo_app")
 				axios.get('http://localhost:3000/api/todo/', {headers: {'token':this.$cookies.get('todo_app')}})
 				.then(response => {
 					return response.data
@@ -66,11 +65,10 @@
 					}
 				})
 				.then(response => {
-					return response.data
-				})
-				.then(data => {
-					this.newTask = ''
-					return this.getTask()
+					if (!(response.status > 200)) {
+						this.newTask = ''
+						return this.getTask()
+					}
 				})
 				.catch(e => {
 					console.log(e.message)
@@ -87,10 +85,9 @@
 					}
 				})
 				.then(response => {
-					return response.data
-				})
-				.then(data => {
-					return this.getTask()
+					if (!(response.status > 200)) {
+						return this.getTask()
+					}
 				})
 				.catch(e => {
 					console.log(e.message)
@@ -104,10 +101,9 @@
 					}
 				})
 				.then(response => {
-					return response.data
-				})
-				.then(data => {
-					return this.getTask()
+					if (!(response.status > 200)) {
+						return this.getTask()
+					}
 				})
 				.catch(e => {
 					console.log(e.message)

@@ -4,7 +4,7 @@
 			<label class="subtitle">
 				Please enter a new ToDo 
 				<div class="field is-grouped">
-					<input id="input "class="input is-medium" :value="newTask" @input="handleInput($event)" @keyup.enter="addTask()"/>
+					<input id="input" class="input is-medium" :value="newTask" @input="handleInput($event)" @keyup.enter="addTask()"/>
 					<button class="button is-info is is-medium" v-on:click="addTask()">ADD</button>	
 				</div>
 			</label>

@@ -17,10 +17,10 @@
           <a v-else @click="leaveGroup" class="dropdown-item">
             Leave Group
           </a>
-          <a v-show="inGroup" class="dropdown-item">
+<!--           <a v-show="inGroup" class="dropdown-item">
             Send Group Message
-          </a>
-          <a v-show="inGroup" class="dropdown-item">
+          </a> -->
+          <a href="#groupTask" v-show="inGroup" class="dropdown-item">
             Add group task
           </a>
         </div>
@@ -45,7 +45,7 @@
           </div>
         </div>
       <h1 class="title is-4">Group Tasks</h1>
-      <GroupTodo />
+      <GroupTodo id="groupTask" />
     </section>
     <section v-else>
       <p class="title is-4">Must be joined with group to view contents</p>
@@ -88,30 +88,41 @@ export default {
         }
       })
       .then(response => {
-        console.log(response)
-        return response.data
+        if (!(response.status > 200)) {
+          alert('You have joined the group "' + this.group + '"!')
+          this.nav = false
+          return this.$emit('complete')
+        }
       })
       .catch(e => {
         console.log(e.message)
       })
     },
     leaveGroup: function() {
-      axios.put('http://localhost:3000/api/groups/leave_group/' + this.$route.params.group, {
-        removedUser: localStorage.getItem("ta_cu"),
-        action: 'leave group'
-      },
-      {
-        headers: {
-          token: this.$cookies.get('todo_app')
-        }
-      })
-      .then(response => {
-        console.log(response)
-        return response.data
-      })
-      .catch(e => {
-        console.log(e.message)
-      })
+      var confirm = window.confirm('Are you sure? This action cannot be undone.')
+      if (confirm) {
+        axios.put('http://localhost:3000/api/groups/leave_group/' + this.$route.params.group, {
+          removedUser: localStorage.getItem("ta_cu"),
+          action: 'leave group'
+        },
+        {
+          headers: {
+            token: this.$cookies.get('todo_app')
+          }
+        })
+        .then(response => {
+          if (!(response.status > 200)) {
+            alert('You have left this group')
+            this.nav = false
+            return this.$emit('complete')
+          }
+        })
+        .catch(e => {
+          console.log(e.message)
+        })
+      } else {
+        return false
+      }
     }
   }
 }

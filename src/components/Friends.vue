@@ -29,7 +29,7 @@
                 <router-link :to="{name: 'user', params: {username: friend.requestingUser.username}}" class="subtitle">{{friend.requestingUser.username}}</router-link>
             </div>
             <footer class="card-footer">
-              <a class="card-footer-item" @click="acceptRequest(friend._id)">Accept Request</a>
+              <a class="card-footer-item" @click="acceptRequest(friend._id, friend.requestingUser.username)">Accept Request</a>
             </footer>
           </div>
           <div v-show="friend.requestingUser.username === currentUser" class="card">
@@ -37,7 +37,7 @@
                 <router-link :to="{name: 'user', params: {username: friend.requestedUser.username}}" class="subtitle">Request sent to {{friend.requestedUser.username}}</router-link>
             </div>
             <footer class="card-footer">
-              <a class="card-footer-item" @click="acceptRequest(friend._id)">Delete</a>
+              <a class="card-footer-item" @click="unfriend(friend._id)">Delete</a>
             </footer>
           </div>
         </div>
@@ -63,10 +63,8 @@ export default {
   	}
   },
   mounted() {
-    console.log('friends mounted')
     axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
-      console.log(response)
       return response.data
     })
     .then(data => {
@@ -78,35 +76,63 @@ export default {
       })
   },
   methods: {
-    acceptRequest: function (id) {
-      console.log(id)
+    acceptRequest: function (id, username) {
       axios.put('http://localhost:3000/api/friends/accept_request/', {
         _id: id,
         action: "accept"
       },
       {headers: {token: this.$cookies.get('todo_app')}})
       .then(response => {
-        console.log(response)
-        return response.data
+        if (!(response.status > 200) && response.data.success) {
+          alert('Friend request from ' + username + ' has been accepted!')
+          return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
+          .then(response => {
+            if (!(response.status > 200)) {
+              return response.data
+            }
+          })
+          .then(data => {
+            this.friends = data
+            this. currentUser = localStorage.getItem("ta_cu")
+          })
+          .catch(e => {
+              console.log(e.message)
+            })
+        }
       }).catch(e => {
         console.log(e.message)
       })
     },
     unfriend: function (id) {
-      console.log(id)
-      axios.delete('http://localhost:3000/api/friends/unfriend/', {
-        data: { 
-          _id: id, 
-          action: 'unfriend'
-        }
-      },
-      {headers: {token: this.$cookies.get('todo_app')}})
-      .then(response => {
-        console.log(response)
-        return response.data
-      }).catch(e => {
-        console.log(e.message)
-      })
+      var confirm = window.confirm("Are you sure? This action cannot be undone.")
+      if (confirm) {
+        axios.delete('http://localhost:3000/api/friends/unfriend/', {
+          data: { 
+            _id: id, 
+            action: 'unfriend'
+          }
+        },
+        {headers: {token: this.$cookies.get('todo_app')}})
+        .then(response => {
+          return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
+          .then(response => {
+            if (!(response.status > 200)) {
+              return response.data
+            }
+          })
+          .then(data => {
+            this.friends = data
+            this. currentUser = localStorage.getItem("ta_cu")
+          })
+          .catch(e => {
+              console.log(e.message)
+            })
+        }).catch(e => {
+          console.log(e.message)
+        })
+      } else {
+        return false
+      }
     }
   },
   computed: {

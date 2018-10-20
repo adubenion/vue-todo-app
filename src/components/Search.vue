@@ -2,11 +2,17 @@
   <div :class="{'is-active': modal}" class="modal">
   <div class="modal-background" @click="close()"></div>
   <div class="modal-content">
-	<div class="field is-grouped">
-		<button class="button is-danger" @click="close()">X</button>
-		<input class="input" :value="searchBar" @input="handleInput($event)" @keyup.enter="searchUsers" placeholder="Search Users" >
-		<a class="button is-success" @click="searchUsers">Search</a>
-		</input>
+  	<div class="box has-text-centered">
+        <h1 style="color:black;" class="subtitle">Search</h1>
+        <label>
+          Search site for Users, Groups, Todo's, and more! 
+			<div class="field is-grouped">
+				<button class="button is-danger" @click="close()">X</button>
+				<input class="input" :value="searchBar" @input="handleInput($event)" @keyup.enter="searchUsers" placeholder="Search for content" >
+				<button class="button is-success" @click="searchUsers">Search</button>
+				</input>
+			</div>
+		</label>
 	</div>
 	<div v-show="searched === true" class="box has-text-centered">
 		<h1 style="color:black;" class="title is-4">Results</h1>
@@ -85,41 +91,72 @@ export default {
 		},
 		searchUsers: function() {
 			var users = []
-			console.log(this.searchBar)
 			if (this.searchBar !== '') {
 				axios.get('http://localhost:3000/api/search/', {headers: {'token':this.$cookies.get('todo_app'), 'search':this.searchBar}})
 				.then(response => {
-					console.log(response)
 					return response.data
 				})
 				.then(data => {
-
 					if (data.length > 0) {
 						this.searched = true
 						if (data[0].length !== undefined && data[0] !== null) {
 							this.usersFromSearch = data[0]
-							console.log(this.usersFromSearch)
 						} else {
 							this.usersFromSearch = ['No results found. Please refine your search.']	
 						}
-
 						if (data[1] !== undefined && data[1] !== null) {
 						this.friends = data[1]
-						console.log(this.friends)
 						} else {
 							this.friends = ['No results found. Please refine your search.']
 						}
 
 						if (data[2] !== undefined && data[1] !== null) {
 						this.groups = data[2]
-						console.log(this.groups)
 						} else {
 							this.groups = ['No results found. Please refine your search.']
 						}
 
 						if (data[3] !== undefined && data[1] !== null) {
 						this.todos = data[3]
-						console.log(this.todos)
+						} else {
+							this.todos = ['No results found. Please refine your search.']
+						}
+						localStorage.getItem("ta_cu")?(this.currentUser = localStorage.getItem("ta_cu")):(this.currentUser = data[4][0].username)
+					} else {
+						users = ['No results found. Please refine your search.']
+						this.$emit('search', users)
+					}
+				})
+				.catch(e => {
+					console.log(e.message)
+				})
+			} else {
+				axios.get('http://localhost:3000/api/search/', {headers: {'token':this.$cookies.get('todo_app'), 'search':'.+'}})
+				.then(response => {
+					return response.data
+				})
+				.then(data => {
+					if (data.length > 0) {
+						this.searched = true
+						if (data[0].length !== undefined && data[0] !== null) {
+							this.usersFromSearch = data[0]
+						} else {
+							this.usersFromSearch = ['No results found. Please refine your search.']	
+						}
+						if (data[1] !== undefined && data[1] !== null) {
+						this.friends = data[1]
+						} else {
+							this.friends = ['No results found. Please refine your search.']
+						}
+
+						if (data[2] !== undefined && data[1] !== null) {
+						this.groups = data[2]
+						} else {
+							this.groups = ['No results found. Please refine your search.']
+						}
+
+						if (data[3] !== undefined && data[1] !== null) {
+						this.todos = data[3]
 						} else {
 							this.todos = ['No results found. Please refine your search.']
 						}

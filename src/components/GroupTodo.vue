@@ -36,13 +36,14 @@
 		},
 		methods: {
 			getTask: function() {
-				var user = this.$cookies.get("todo_app")
 				axios.get('http://localhost:3000/api/group_todo/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
 				.then(response => {
 					return response.data
-				}).then(data => {
+				})
+				.then(data => {
 					this.tasks = data
-				}).catch(e => {
+				})
+				.catch(e => {
 					console.log(e.message)
 				})
 			},
@@ -57,11 +58,12 @@
 					}
 				})
 				.then(response => {
-					return response.data
-				}).then(data => {
-					this.newTask = ''
-					return this.getTask()
-				}).catch(e => {
+					if (!(response.status > 200)) {
+						this.newTask = ''
+						return this.getTask()
+					}
+				})
+				.catch(e => {
 					console.log(e.message)
 				})
 			},
@@ -76,10 +78,11 @@
 					}
 				})
 				.then(response => {
-					return response.data
-				}).then(data => {
-					return this.getTask()
-				}).catch(e => {
+					if (!(response.status > 200)) {
+						return this.getTask()
+					}
+				})
+				.catch(e => {
 					console.log(e.message)
 				})
 			},
@@ -91,10 +94,11 @@
 					}
 				})
 				.then(response => {
-					return response.data
-				}).then(data => {
-					return this.getTask()
-				}).catch(e => {
+					if (!(response.status > 200)) {
+						return this.getTask()
+					}
+				})
+				.catch(e => {
 					console.log(e.message)
 				})
 			}

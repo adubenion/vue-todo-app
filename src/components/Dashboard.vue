@@ -75,10 +75,8 @@ export default {
     }
   },
   mounted() {
-    console.log('dashboard mounted')
     axios.get('http://localhost:3000/api/dashboard', {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
-      console.log(response)
       return response.data
     })
     .then(data => {
@@ -86,7 +84,6 @@ export default {
       this.friends = data[0].friend_docs
       this.groups = data[0].user_groups
       this. currentUser = localStorage.getItem("ta_cu")
-      console.log(this.friends)
     })
     .catch(e => {
         console.log(e.message)

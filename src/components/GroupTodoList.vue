@@ -6,12 +6,12 @@
 	          <ul v-for="task in incompleteTasks" :key="task._id">
 							<div class="card">
 								<div class="card-content">
-									<li>
+										<li>
 									<p class="subtitle">{{ task.description }}</p>
 									</li>
 								</div>
 		            <footer class="card-footer">
-		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" v-model="task.completed">Completed</a>
+		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" >Completed</a>
 		              <a class="card-footer-item" @click="deleteTask(task._id)">Delete</a>
 		            </footer>
 							</div>
@@ -30,7 +30,7 @@
 									</li>
 								</div>
 		            <footer class="card-footer">
-		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" v-model="task.completed">Do Again</a>
+		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" >Do Again</a>
 		              <a class="card-footer-item" @click="deleteTask(task._id)">Delete</a>
 		            </footer>
 							</div>

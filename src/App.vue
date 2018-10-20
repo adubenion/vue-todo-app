@@ -4,7 +4,8 @@
 			<section class="hero is-info is-bold">
 				<div class="hero-body">
 					<div class="container is-fluid has-text-centered">
-						<h1 class="title">{{ title }}</h1>				
+						<h1 class="title">{{ title }}</h1>	
+						<p class="subtitle">{{ subtitle }}</p>			
 					</div>				
 				</div>
 				<nav class="navbar" role="navigation" aria-label="main navigation">
@@ -22,7 +23,7 @@
 				    <a v-show="loggedIn === true" @click="navbarAction('/todos')" class="navbar-item">Todos</a>
 				    <a v-show="loggedIn === true" @click="navbarAction('/friends')" class="navbar-item">Friends</a>
 				    <a v-show="loggedIn === true" @click="navbarAction('/groups')" class="navbar-item">Groups</a>
-				    <a v-show="loggedIn === true" @click="navbarAction('/messages')" class="navbar-item">Messages</a>
+				    <!-- <a v-show="loggedIn === true" @click="navbarAction('/messages')" class="navbar-item">Messages</a> -->
 				    <a v-show="loggedIn === false" @click="navbarAction('/login')" class="navbar-item">Login</a>
 				    <a v-show="loggedIn === true" @click="handleLogout" class="navbar-item">Logout</a>
 				    <a v-show="loggedIn === true && modal === false" @click="isModal" class="navbar-item">Search</a>
@@ -53,7 +54,8 @@
 		},
 		data() {
 			return {
-				title: 'Todo App',
+				title: 'Just ToDo-It',
+				subtitle: 'An app for collaborative productivity',
 				hamburger: false,
 				loggedIn: false,
 				currentUser: '',
@@ -64,14 +66,6 @@
 		},
 		created() {
 			if (this.$cookies.isKey('todo_app')) {
-		        // axios.get('http://localhost:3000/auth')
-		        // .then((response) => {
-		        //   if (!(response > 200)) {
-		        //   	this.currentUser = response.data.auth
-		        //   }
-		        // }).catch(e => {
-		        //   console.log(e)
-		        // })
 					this.loggedIn = true
 				if (localStorage.getItem("ta_cu")) {
 					this.currentUser = localStorage.getItem("ta_cu")
@@ -119,8 +113,10 @@
 			check: function() {
 				if (this.$cookies.isKey('todo_app')) {
 					this.loggedIn = true
+					return this.loggedIn
 				} else {
 					this.loggedIn = false
+					return this.loggedIn
 				}
 			}
 		}

@@ -51,10 +51,8 @@ export default {
   	}
   },
   mounted() {
-    console.log('groups mounted')
     axios.get('http://localhost:3000/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
-      console.log(response)
       return response.data
     })
     .then(data => {
@@ -76,7 +74,6 @@ export default {
         }
       })
       .then(response => {
-        console.log(response)
         return response.data
       })
       .catch(e => {
@@ -84,22 +81,35 @@ export default {
       })
     },
     leaveGroup: function(name) {
-      axios.put('http://localhost:3000/api/groups/leave_group/' + name, {
-        removedUser: localStorage.getItem("ta_cu"),
-        action: 'leave group'
-      },
-      {
-        headers: {
-          token: this.$cookies.get('todo_app')
-        }
-      })
-      .then(response => {
-        console.log(response)
-        return response.data
-      })
-      .catch(e => {
-        console.log(e.message)
-      })
+      var confirm = window.confirm('Are you sure? This action cannot be undone.')
+      if (confirm) {
+        axios.put('http://localhost:3000/api/groups/leave_group/' + name, {
+          removedUser: localStorage.getItem("ta_cu"),
+          action: 'leave group'
+        },
+        {
+          headers: {
+            token: this.$cookies.get('todo_app')
+          }
+        })
+        .then(response => {
+          if (!(response.status > 200)) {
+            return axios.get('http://localhost:3000/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
+            .then(response => {
+              return response.data
+            })
+            .then(data => {
+              this.groups = data
+            })
+            .catch(e => {
+                console.log(e.message)
+            })
+          }
+        })
+        .catch(e => {
+          console.log(e.message)
+        })
+      }
     }
   }
 }

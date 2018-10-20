@@ -114,7 +114,7 @@ app.post('/api/create_group_todo/:group', (req, res, next) => {
 				if (!err) {
 					id = result._id
 					var todo ={
-						description: req.body.description,
+						description: `${decodedToken.username}: ${req.body.description}`,
 						completed: req.body.completed,
 						user: id
 					}
@@ -249,7 +249,7 @@ app.post('/api/friends/send_request/', (req,res,next) => {
 						friends: false
 					}
 					Friend.create(friend, (err,result) => {
-						res.send(result)
+						res.json({success: 'friend added'})
 					})
 				})
 			} else {
@@ -423,9 +423,9 @@ app.get('/api/messages/', (req,res,next) => {
 				if (ok._id !== null && String(ok._id) === decodedToken.id) {
 					Message.find({to: ok.username}, (err, result) => {
 						if (!err) {
-							res.json({success: 'User Found', message: result})
+							res.json({success: 'Messages received', message: result})
 						} else {
-							res.json({error: 'User Not Found'})
+							res.json({error: 'Messages could not be retrieved'})
 						}
 					})
 				} else {
@@ -495,7 +495,10 @@ app.get('/auth/', (req,res,next) => {
 // APP UTILS
 app.get('/api/search/', (req,res,next) => {
 	var token = req.cookies.todo_app;
-	var q = req.headers.search
+	var q = req.headers.search;
+	if (q === '') {
+		q = '.+'
+	}
 	id = req.body._id;
 	jwt.verify(token, secret, (err, decodedToken) => {
 		if (!err) {
@@ -506,16 +509,36 @@ app.get('/api/search/', (req,res,next) => {
 			var todosAgg = Todo.aggregate([{$match: {$and: [{description: new RegExp(`${q}`, "gi")},{user: new ObjectId(decodedToken.id)}]}}, {$project: {email: 0, password: 0}}])
 			var currentUser = User.aggregate([{$match:{description: new RegExp(`${q}`, "gi")}}, {$project: {username: 1}}])
 			userAgg.exec((err, result) => {
-				search.push(result)
-				friendsAgg.exec((err, result) => {
+				if (!err) {
 					search.push(result)
-					groupsAgg.exec((err, result) => {
+				} else {
+					res.json({error: err})
+				}
+				friendsAgg.exec((err, result) => {
+					if (!err) {
 						search.push(result)
-						todosAgg.exec((err, result) => {
+					} else {
+						res.json({error: err})
+					}
+					groupsAgg.exec((err, result) => {
+						if (!err) {
 							search.push(result)
-							currentUser.exec((err,result) => {
+						} else {
+							res.json({error: err})
+						}
+						todosAgg.exec((err, result) => {
+							if (!err) {
 								search.push(result)
-								res.send(search)
+							} else {
+								res.json({error: err})
+							}
+							currentUser.exec((err,result) => {
+								if (!err) {
+									search.push(result)
+									res.send(search)
+								} else {
+									res.json({error: err})
+								}
 							})
 						})
 					})

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="username.split(' ').includes('Not', 2) === false" :class="{'is-active': this.nav}" class="dropdown">
+    <div v-show="(username.split(' ').includes('Not', 2) === false)" :class="{'is-active': this.nav}" class="dropdown">
       <div class="dropdown-trigger">
         <button @click="() => {this.nav = !this.nav}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
           <span>Profile Menu</span>
@@ -10,21 +10,21 @@
         </button>
       </div>
       <div class="dropdown-menu" id="dropdown-menu" role="menu">
-        <div v-show="friends === true && friendsPending === false" class="dropdown-content">
-          <a href="#" class="dropdown-item">
+        <div v-show="friends && !friendsPending" class="dropdown-content">
+          <a @click="unfriend(id)" class="dropdown-item">
             Unfriend
           </a>
-          <a class="dropdown-item" @click="() => {this.$router.replace('/messages')}">
+<!--           <a class="dropdown-item" @click="() => {this.$router.replace('/messages')}">
             Send Message
-          </a>
+          </a> -->
         </div>
-        <div v-show="friends === false && friendsPending === false" class="dropdown-content">
+        <div v-show="!friends && !friendsPending" class="dropdown-content">
           <a  @click="addFriend" class="dropdown-item">
             Add Friend
           </a>
         </div>
-        <div v-show="friends === false && friendsPending === true" class="dropdown-content">
-          <a href="#" class="dropdown-item">
+        <div v-show="!friends && friendsPending" class="dropdown-content">
+          <a @click="unfriend(id)" class="dropdown-item">
             Delete Request
           </a>
         </div>
@@ -90,7 +90,8 @@ export default {
     incompleteTasks: Array,
     friendsList: Array,
     friends: Boolean,
-    friendsPending: Boolean
+    friendsPending: Boolean,
+    id: String
   },
   data() {
     return {
@@ -109,8 +110,37 @@ export default {
         }
       })
       .then(response => {
-        console.log(response)
+        if (!(response.status > 200) && response.data.success) {
+          alert('Friend request has been sent to ' + this.username + '!')
+          this.nav = false
+          return this.$emit('complete')
+        }
       })
+      .catch(e => {
+        console.log(e.message)
+      })
+    },
+    unfriend: function (id) {
+      var confirm = window.confirm("Are you sure? This action cannot be undone.")
+      if (confirm) {
+        axios.delete('http://localhost:3000/api/friends/unfriend/', {
+          data: { 
+            _id: id, 
+            action: 'unfriend'
+          }
+        },
+        {headers: {token: this.$cookies.get('todo_app')}})
+        .then(response => {
+          if (!(response.status > 200) && response.data.success) {
+            this.nav = false
+            return this.$emit('complete')
+          }
+        }).catch(e => {
+          console.log(e.message)
+        })
+      } else {
+        return false
+      }
     }
   }
 }

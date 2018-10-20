@@ -6,25 +6,23 @@
     <section class="section">
       <div v-if="messages.length">
         <div v-for="message in messages" :key="message._id" >
-          <div class="card">
+          <div v-show="!showMessage" class="card">
             <div class="card-content">
-              <div class="content">
-                <label class="title is-5">
-                  To:
-                  <p class="subtitle">{{message.to}}</p>
-                </label>
-                <label class="title is-5">
-                  From:
-                  <p class="subtitle">{{message.from}}</p>
-                </label>
-                <label class="title is-5">
-                  Subject:
-                  <p class="subtitle">{{message.subject}}</p>
-                </label>
-                <label class="title is-5">
-                  Body
-                  <p class="subtitle">{{message.body}}</p>
-                </label>
+              <div>
+                  <p class="subtitle">From: {{message.from}} Subject: {{message.subject}}</p>
+              </div>
+            </div>
+            <footer class="card-footer">
+              <a class="card-footer-item">Read</a>
+            </footer>
+          </div>
+          <div v-show="showMessage" class="card">
+            <div class="card-content">
+              <div>
+                  <p class="subtitle">From: {{message.from}} To: {{message.to}}</p>
+                  <p class="subtitle">Subject: {{message.subject}}</p>
+                  <p class="subtitle">Body: <p class="subtitle">{{message.body}}</p></p>
+                  <p class="subtitle"></p>
               </div>
             </div>
             <footer class="card-footer">
@@ -50,14 +48,13 @@ export default {
   name: 'messages',
   data() {
   	return {
+      showMessage: false,
       messages: []
   	}
   },
   mounted() {
-  	console.log("messages mounted")
     axios.get('http://localhost:3000/api/messages', {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
-      console.log(response)
       return response.data
     })
     .then(data => {

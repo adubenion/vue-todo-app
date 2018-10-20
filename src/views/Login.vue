@@ -27,7 +27,7 @@
 				<div class="field is-grouped">
 					<div class="control">
 						<button class="button is-success is is-medium" v-on:click="handleLogin()">Login</button>
-						<p>Forgot password?</p>
+<!-- 						<p>Forgot password?</p> -->
 					</div>
 <!-- 					<div class="control">
 						<button class="button is-danger is-medium">Forgot Password</button>
@@ -63,7 +63,6 @@
 						username: this.username,
 						password: this.password
 					}).then(response => {
-						console.log(response)
 						return response.data
 					}).then(data => {
 						if (data !== null && data.status !== 'error') {

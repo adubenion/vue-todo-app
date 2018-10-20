@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'is-active': addGroupModal}"class="modal">
+  <div :class="{'is-active': addGroupModal}" class="modal">
     <div class="modal-background" @click="close"></div>
     <div class="modal-content">
       <div class="box">
@@ -55,7 +55,6 @@ export default {
         }
       })
       .then(response => {
-        console.log(response)
         return response.data
       })
       .catch(e => {

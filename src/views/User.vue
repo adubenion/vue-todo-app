@@ -10,7 +10,9 @@
     :groups="groups"
     :todos="todos"
     :friendsList="friendsList"
-    :incompleteTasks="incompleteTasks" />
+    :incompleteTasks="incompleteTasks"
+    :id="id" 
+    @complete="reload"/>
   </div>  
 </template>
 
@@ -27,6 +29,7 @@ export default {
   },
   data() {
   	return {
+      id: '',
   		username: '',
       friends: false,
       friendsPending: false,
@@ -36,10 +39,8 @@ export default {
   	}
   },
   mounted() {
-  	console.log('user profile mounted')
   	axios.get('http://localhost:3000/api/user/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
   	.then(response => {
-  		console.log(response)
   		return response.data
   	})
   	.then(data => {
@@ -50,19 +51,17 @@ export default {
   		}
       return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
       .then(response => {
-        console.log(response)
         return response.data
       })
       .then(data => {
         if (data.length) {
           var association = data.filter(i => i.association.includes(localStorage.getItem("ta_cu")) && i.association.includes(this.username))
-          console.log(association)
           if (association.length) {
             this.friends = association[0].friends
             this.friendsPending = !association[0].requestAccepted
+            this.id = association[0]._id
               return axios.get('http://localhost:3000/api/user_profile/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
               .then(response => {
-                console.log('user profile data: ',response)
                 return response.data
               })
               .then(data => {
@@ -90,12 +89,65 @@ export default {
         console.log(e.message)
     })
   },
+  methods: {
+    reload: function() {
+      axios.get('http://localhost:3000/api/user/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
+      .then(response => {
+        return response.data
+      })
+      .then(data => {
+        if (data.success) {
+          this.username = this.$route.params.username
+        } else {
+          this.username = data.error
+        }
+        return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
+        .then(response => {
+          return response.data
+        })
+        .then(data => {
+          if (data.length) {
+            var association = data.filter(i => i.association.includes(localStorage.getItem("ta_cu")) && i.association.includes(this.username))
+            if (association.length) {
+              this.friends = association[0].friends
+              this.friendsPending = !association[0].requestAccepted
+              this.id = association[0]._id
+                return axios.get('http://localhost:3000/api/user_profile/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
+                .then(response => {
+                  return response.data
+                })
+                .then(data => {
+                  this.todos = data[0].todo_docs
+                  this.userFriends = data[0].friend_docs
+                  this.groups = data[0].user_groups
+                })
+                .catch(e => {
+                    console.log(e.message)
+                })
+            } else {
+              this.friends = false
+              this.friendsPending = false
+            }
+          } else {
+            this.friends = false
+            this.friendsPending = false
+          }
+        })
+        .catch(e => {
+          console.log(e.message)
+        })
+      })
+      .catch(e => {
+          console.log(e.message)
+      })
+    }
+  },
   computed: {
     showProfile: function() {
       if (this.username === localStorage.getItem("ta_cu")) {
         return true
       } else {
-        if (this.friends === true && this.friendsPending === false) {
+        if (this.friends && !this.friendsPending) {
           return true
         } else {
           return false
@@ -113,7 +165,6 @@ export default {
     '$route.params.username': function(un) {
     axios.get('http://localhost:3000/api/user/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
-      console.log(response)
       return response.data
     })
     .then(data => {
@@ -121,19 +172,16 @@ export default {
         this.username = un
         return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
         .then(response => {
-          console.log(response)
           return response.data
         })
         .then(data => {
           if (data.length) {
             var association = data.filter(i => i.association.includes(localStorage.getItem("ta_cu")) && i.association.includes(this.username))
-            console.log(association)
             if (association.length) {
               this.friends = association[0].friends
               this.friendsPending = !association[0].requestAccepted
                 return axios.get('http://localhost:3000/api/user_profile/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
                 .then(response => {
-                  console.log('user profile data: ',response)
                   return response.data
                 })
                 .then(data => {

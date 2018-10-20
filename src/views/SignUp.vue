@@ -78,16 +78,21 @@
 				this.flags.failure = false
 				this.flags.success = false
 				if (this.validateEmail && this.validateUsername && this.validatePassword) {
-					console.log(this.email, this.username, this.password, this.confirm);
 					axios.post('http://localhost:3000/api/create_user', {
 						email: this.email,
 						username: this.username,
 						password: this.password,
 						passwordConf: this.confirm
-					}).then(response => {
-						this.flags.success = true
-						console.log(response)
-					}).catch(e => {console.log(e.message)})
+					})
+					.then(response => {
+						if (!(response.status > 200)) {
+							this.flags.success = true
+							return this.$router.replace('/')
+						}
+					})
+					.catch(e => {
+						console.log(e.message)
+					})
 				} else {
 					this.flags.failure = true
 				}
@@ -96,7 +101,7 @@
 		computed: {
 			validateEmail: function() {
 				if (this.email != '') {
-					if (/^.[^@]*\@.[^@]+\.[a-z]{2,6}$/.test(this.email)) {
+					if (/^.[^@]*@.[^@]+\.[a-z]{2,6}$/.test(this.email)) {
 						return true 
 					} else {
 						return false
