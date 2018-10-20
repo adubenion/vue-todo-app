@@ -46,7 +46,7 @@ export default {
       this.$emit('input', this.input)
     },
     addGroupSubmit: function() {
-      axios.post('http://localhost:3000/api/create_group/', {
+      axios.post('/todo-app/api/create_group/', {
         name: this.addGroupName, 
       },
       {

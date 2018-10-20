@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     joinGroup: function() {
-      axios.put('http://localhost:3000/api/groups/join_group/' + this.$route.params.group, {
+      axios.put('/todo-app/api/groups/join_group/' + this.$route.params.group, {
         addedUser: localStorage.getItem("ta_cu"),
         action: 'join group'
       },
@@ -101,7 +101,7 @@ export default {
     leaveGroup: function() {
       var confirm = window.confirm('Are you sure? This action cannot be undone.')
       if (confirm) {
-        axios.put('http://localhost:3000/api/groups/leave_group/' + this.$route.params.group, {
+        axios.put('/todo-app/api/groups/leave_group/' + this.$route.params.group, {
           removedUser: localStorage.getItem("ta_cu"),
           action: 'leave group'
         },

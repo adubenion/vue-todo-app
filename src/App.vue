@@ -70,7 +70,7 @@
 				if (localStorage.getItem("ta_cu")) {
 					this.currentUser = localStorage.getItem("ta_cu")
 				} else {
-			        axios.get('http://localhost:3000/auth')
+			        axios.get('/todo-app/auth')
 			        .then((response) => {
 						if (!(response.status > 200)) {
 							localStorage.setItem("ta_cu", response.data.auth)

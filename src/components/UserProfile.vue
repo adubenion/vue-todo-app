@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     addFriend: function() {
-      axios.post('http://localhost:3000/api/friends/send_request/', {
+      axios.post('/todo-app/api/friends/send_request/', {
         action: 'request',
         requestedUser: this.username
       },
@@ -123,7 +123,7 @@ export default {
     unfriend: function (id) {
       var confirm = window.confirm("Are you sure? This action cannot be undone.")
       if (confirm) {
-        axios.delete('http://localhost:3000/api/friends/unfriend/', {
+        axios.delete('/todo-app/api/friends/unfriend/', {
           data: { 
             _id: id, 
             action: 'unfriend'

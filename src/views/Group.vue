@@ -31,7 +31,7 @@ export default {
   	}
   },
   mounted() {
-  	axios.get('http://localhost:3000/api/groups/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
+  	axios.get('/todo-app/api/groups/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
   	.then(response => {
   		return response.data
   	})
@@ -41,7 +41,7 @@ export default {
   		} else {
   			this.group = data.error
   		}
-      return axios.get('http://localhost:3000/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
+      return axios.get('/todo-app/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
       .then(response => {
         return response.data
       })
@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     reload: function() {
-      axios.get('http://localhost:3000/api/groups/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
+      axios.get('/todo-app/api/groups/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
       .then(response => {
         return response.data
       })
@@ -71,7 +71,7 @@ export default {
         } else {
           this.group = data.error
         }
-        return axios.get('http://localhost:3000/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
+        return axios.get('/todo-app/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
         .then(response => {
           return response.data
         })
@@ -92,7 +92,7 @@ export default {
   },
   watch: {
     '$route.params.username': function(gr) {
-    axios.get('http://localhost:3000/api/group/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
+    axios.get('/todo-app/api/group/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
       return response.data
     })

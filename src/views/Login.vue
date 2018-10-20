@@ -59,7 +59,7 @@
 		methods: {
 			handleLogin: function () {
 				if (this.username != '' && this.password != '') {
-					axios.post('http://localhost:3000/login/do', {
+					axios.post('/todo-app/login/do', {
 						username: this.username,
 						password: this.password
 					}).then(response => {

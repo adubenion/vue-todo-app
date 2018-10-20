@@ -43,7 +43,7 @@
 		},
 		methods: {
 			getTask: function() {
-				axios.get('http://localhost:3000/api/todo/', {headers: {'token':this.$cookies.get('todo_app')}})
+				axios.get('/todo-app/api/todo/', {headers: {'token':this.$cookies.get('todo_app')}})
 				.then(response => {
 					return response.data
 				})
@@ -55,7 +55,7 @@
 				})
 			},
 			addTask: function() {
-				axios.post('http://localhost:3000/api/create_todo/', {
+				axios.post('/todo-app/api/create_todo/', {
 					description: this.newTask, 
 					completed: false
 				},
@@ -75,7 +75,7 @@
 				})
 			},
 			updateTask: function(id, completed) {
-				axios.put('http://localhost:3000/api/update_todo/', {
+				axios.put('/todo-app/api/update_todo/', {
 					_id: id,
 					completed: !completed
 				},
@@ -94,7 +94,7 @@
 				})
 			},
 			deleteTask: function(id) {	
-				axios.delete('http://localhost:3000/api/delete_todo/', {
+				axios.delete('/todo-app/api/delete_todo/', {
 					data: {
 						_id: id,
 						token: this.$cookies.get('todo_app')

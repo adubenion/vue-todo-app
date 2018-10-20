@@ -75,7 +75,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://localhost:3000/api/dashboard', {headers: {'token':this.$cookies.get('todo_app')}})
+    axios.get('/todo-app/api/dashboard', {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
       return response.data
     })

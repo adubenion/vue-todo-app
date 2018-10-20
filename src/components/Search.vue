@@ -92,7 +92,7 @@ export default {
 		searchUsers: function() {
 			var users = []
 			if (this.searchBar !== '') {
-				axios.get('http://localhost:3000/api/search/', {headers: {'token':this.$cookies.get('todo_app'), 'search':this.searchBar}})
+				axios.get('/todo-app/api/search/', {headers: {'token':this.$cookies.get('todo_app'), 'search':this.searchBar}})
 				.then(response => {
 					return response.data
 				})
@@ -131,7 +131,7 @@ export default {
 					console.log(e.message)
 				})
 			} else {
-				axios.get('http://localhost:3000/api/search/', {headers: {'token':this.$cookies.get('todo_app'), 'search':'.+'}})
+				axios.get('/todo-app/api/search/', {headers: {'token':this.$cookies.get('todo_app'), 'search':'.+'}})
 				.then(response => {
 					return response.data
 				})

@@ -36,7 +36,7 @@
 		},
 		methods: {
 			getTask: function() {
-				axios.get('http://localhost:3000/api/group_todo/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
+				axios.get('/todo-app/api/group_todo/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
 				.then(response => {
 					return response.data
 				})
@@ -48,7 +48,7 @@
 				})
 			},
 			addTask: function() {
-				axios.post('http://localhost:3000/api/create_group_todo/' + this.$route.params.group, {
+				axios.post('/todo-app/api/create_group_todo/' + this.$route.params.group, {
 					description: this.newTask, 
 					completed: false
 				},
@@ -68,7 +68,7 @@
 				})
 			},
 			updateTask: function(id, completed) {
-				axios.put('http://localhost:3000/api/update_group_todo/' + this.$route.params.group, {
+				axios.put('/todo-app/api/update_group_todo/' + this.$route.params.group, {
 					_id: id,
 					completed: !completed
 				},
@@ -87,7 +87,7 @@
 				})
 			},
 			deleteTask: function(id) {	
-				axios.delete('http://localhost:3000/api/delete_group_todo/' + this.$route.params.group, {
+				axios.delete('/todo-app/api/delete_group_todo/' + this.$route.params.group, {
 					data: {
 						_id: id,
 						token: this.$cookies.get('todo_app')

@@ -78,7 +78,7 @@
 				this.flags.failure = false
 				this.flags.success = false
 				if (this.validateEmail && this.validateUsername && this.validatePassword) {
-					axios.post('http://localhost:3000/api/create_user', {
+					axios.post('/todo-app/api/create_user', {
 						email: this.email,
 						username: this.username,
 						password: this.password,

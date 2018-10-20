@@ -51,7 +51,7 @@ export default {
   	}
   },
   mounted() {
-    axios.get('http://localhost:3000/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
+    axios.get('/todo-app/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
       return response.data
     })
@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     joinGroup: function() {
-      axios.put('http://localhost:3000/api/groups/join_group/' + this.$route.params.group, {
+      axios.put('/todo-app/api/groups/join_group/' + this.$route.params.group, {
         addedUser: localStorage.getItem("ta_cu"),
         action: 'join group'
       },
@@ -83,7 +83,7 @@ export default {
     leaveGroup: function(name) {
       var confirm = window.confirm('Are you sure? This action cannot be undone.')
       if (confirm) {
-        axios.put('http://localhost:3000/api/groups/leave_group/' + name, {
+        axios.put('/todo-app/api/groups/leave_group/' + name, {
           removedUser: localStorage.getItem("ta_cu"),
           action: 'leave group'
         },
@@ -94,7 +94,7 @@ export default {
         })
         .then(response => {
           if (!(response.status > 200)) {
-            return axios.get('http://localhost:3000/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
+            return axios.get('/todo-app/api/groups', {headers: {'token':this.$cookies.get('todo_app')}})
             .then(response => {
               return response.data
             })

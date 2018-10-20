@@ -114,7 +114,7 @@ router.beforeEach((to, from, next) => {
           },
         });
       } else {
-        axios.get('http://localhost:3000/auth')
+        axios.get('/todo-app/auth')
         .then((response) => {
           if (!(response.status > 200)) {
             next()

@@ -39,7 +39,7 @@ export default {
   	}
   },
   mounted() {
-  	axios.get('http://localhost:3000/api/user/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
+  	axios.get('/todo-app/api/user/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
   	.then(response => {
   		return response.data
   	})
@@ -49,7 +49,7 @@ export default {
   		} else {
   			this.username = data.error
   		}
-      return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
+      return axios.get('/todo-app/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
       .then(response => {
         return response.data
       })
@@ -60,7 +60,7 @@ export default {
             this.friends = association[0].friends
             this.friendsPending = !association[0].requestAccepted
             this.id = association[0]._id
-              return axios.get('http://localhost:3000/api/user_profile/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
+              return axios.get('/todo-app/api/user_profile/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
               .then(response => {
                 return response.data
               })
@@ -91,7 +91,7 @@ export default {
   },
   methods: {
     reload: function() {
-      axios.get('http://localhost:3000/api/user/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
+      axios.get('/todo-app/api/user/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
       .then(response => {
         return response.data
       })
@@ -101,7 +101,7 @@ export default {
         } else {
           this.username = data.error
         }
-        return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
+        return axios.get('/todo-app/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
         .then(response => {
           return response.data
         })
@@ -112,7 +112,7 @@ export default {
               this.friends = association[0].friends
               this.friendsPending = !association[0].requestAccepted
               this.id = association[0]._id
-                return axios.get('http://localhost:3000/api/user_profile/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
+                return axios.get('/todo-app/api/user_profile/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
                 .then(response => {
                   return response.data
                 })
@@ -163,14 +163,14 @@ export default {
   },
   watch: {
     '$route.params.username': function(un) {
-    axios.get('http://localhost:3000/api/user/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
+    axios.get('/todo-app/api/user/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
       return response.data
     })
     .then(data => {
       if (data.success) {
         this.username = un
-        return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
+        return axios.get('/todo-app/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
         .then(response => {
           return response.data
         })
@@ -180,7 +180,7 @@ export default {
             if (association.length) {
               this.friends = association[0].friends
               this.friendsPending = !association[0].requestAccepted
-                return axios.get('http://localhost:3000/api/user_profile/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
+                return axios.get('/todo-app/api/user_profile/' + this.$route.params.username, {headers: {'token':this.$cookies.get('todo_app')}})
                 .then(response => {
                   return response.data
                 })

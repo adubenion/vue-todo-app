@@ -63,7 +63,7 @@ export default {
   	}
   },
   mounted() {
-    axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
+    axios.get('/todo-app/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
     .then(response => {
       return response.data
     })
@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     acceptRequest: function (id, username) {
-      axios.put('http://localhost:3000/api/friends/accept_request/', {
+      axios.put('/todo-app/api/friends/accept_request/', {
         _id: id,
         action: "accept"
       },
@@ -85,7 +85,7 @@ export default {
       .then(response => {
         if (!(response.status > 200) && response.data.success) {
           alert('Friend request from ' + username + ' has been accepted!')
-          return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
+          return axios.get('/todo-app/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
           .then(response => {
             if (!(response.status > 200)) {
               return response.data
@@ -106,7 +106,7 @@ export default {
     unfriend: function (id) {
       var confirm = window.confirm("Are you sure? This action cannot be undone.")
       if (confirm) {
-        axios.delete('http://localhost:3000/api/friends/unfriend/', {
+        axios.delete('/todo-app/api/friends/unfriend/', {
           data: { 
             _id: id, 
             action: 'unfriend'
@@ -114,7 +114,7 @@ export default {
         },
         {headers: {token: this.$cookies.get('todo_app')}})
         .then(response => {
-          return axios.get('http://localhost:3000/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
+          return axios.get('/todo-app/api/friends', {headers: {'token':this.$cookies.get('todo_app')}})
           .then(response => {
             if (!(response.status > 200)) {
               return response.data
