@@ -6,13 +6,13 @@
         <h1 style="color:black;" class="subtitle">Search</h1>
         <label>
           Search site for Users, Groups, Todo's, and more! 
-			<div class="field is-grouped">
-				<button class="button is-danger" @click="close()">X</button>
-				<input class="input" :value="searchBar" @input="handleInput($event)" @keyup.enter="searchUsers" placeholder="Search for content" >
-				<button class="button is-success" @click="searchUsers">Search</button>
-				</input>
-			</div>
 		</label>
+		<div class="field is-grouped">
+			<button class="button is-danger" @click="close()">X</button>
+			<input class="input" :value="searchBar" @input="handleInput($event)" @keyup.enter="searchUsers" placeholder="Search for content" >
+			<button class="button is-success" @click="searchUsers">Search</button>
+			</input>
+		</div>
 	</div>
 	<div v-show="searched === true" class="box has-text-centered">
 		<h1 style="color:black;" class="title is-4">Results</h1>

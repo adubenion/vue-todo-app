@@ -6,13 +6,13 @@
         <h1 class="subtitle">Create a Group!</h1>
         <label>
           Group Name
-          <div class="field is-grouped">
-            <button class="button is-danger" @click="close">X</button>
-            <input class="input" :value="addGroupName" @input="handleInput($event)" @keyup.enter="addGroupSubmit" placeholder="Please add a name for new group" >
-            <button class="button is-success" @click="addGroupSubmit">Create</button>
-            </input>
-          </div>
         </label>
+        <div class="field is-grouped">
+          <button class="button is-danger" @click="close">X</button>
+          <input class="input" :value="addGroupName" @input="handleInput($event)" @keyup.enter="addGroupSubmit" placeholder="Please add a name for new group" >
+          <button class="button is-success" @click="addGroupSubmit">Create</button>
+          </input>
+        </div>
       </div>
     </div>
   </div>
