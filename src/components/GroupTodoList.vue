@@ -6,19 +6,19 @@
 	          <ul v-for="task in incompleteTasks" :key="task._id">
 							<div class="card">
 								<div class="card-content">
-									<li>
+										<li>
 									<p class="subtitle">{{ task.description }}</p>
 									</li>
 								</div>
 		            <footer class="card-footer">
-		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" v-model="task.completed">Completed</a>
+		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" >Completed</a>
 		              <a class="card-footer-item" @click="deleteTask(task._id)">Delete</a>
 		            </footer>
 							</div>
 	          </ul>
 					</div>
 					<p class="subtitle" v-else>
-						All tasks have been completed!
+						All Group Tasks have been completed! Yay, teamwork!
 					</p>
 					<hr>
 					<div v-if="completedTasks.length">            
@@ -30,7 +30,7 @@
 									</li>
 								</div>
 		            <footer class="card-footer">
-		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" v-model="task.completed">Do Again</a>
+		              <a class="card-footer-item" @click="updateTask(task._id, task.completed)" >Do Again</a>
 		              <a class="card-footer-item" @click="deleteTask(task._id)">Delete</a>
 		            </footer>
 							</div>
@@ -40,7 +40,7 @@
 				<div v-else>
 					<div class="card">
 						<div class="card-content">
-							<p class="subtitle">There are no todos yet</p>
+							<p class="subtitle">There are no Group Todos yet</p>
 						</div>
 					</div>
 				</div>
@@ -51,7 +51,7 @@
 <script>
 
 	export default {
-		name: 'List',
+		name: 'GroupTodoList',
 		props: {
 			tasks: Array,
 			completedTasks: Array,

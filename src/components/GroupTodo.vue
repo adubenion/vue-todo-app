@@ -1,13 +1,12 @@
 <template>
 	<div>
-		<Input :addTask="addTask" :newTask="newTask" @input="newTask = $event" />
-		<List 
+		<GroupTodoInput :addTask="addTask" :newTask="newTask" @input="newTask = $event" />
+		<GroupTodoList 
 		:tasks="tasks" 
 		:completedTasks="completedTasks" 
 		:incompleteTasks="incompleteTasks"
 		:updateTask="updateTask"
-		:deleteTask="deleteTask">
-		</List>
+		:deleteTask="deleteTask" />
 	</div>
 </template>
 
@@ -16,26 +15,20 @@
 	axios.defaults.withCredentials = true
 	import 'bulma/css/bulma.css';
 
-	import Header from './Header.vue';
-	import Input from './Input.vue';
-	import List from './List.vue';
-	import SignUp from './SignUp.vue';
+	import GroupTodoInput from './GroupTodoInput.vue';
+	import GroupTodoList from './GroupTodoList.vue';
 
 
 	export default {
-		name: 'Todo',
+		name: 'GroupTodo',
 		components: {
-			Header,
-			Input,
-			List,
-			SignUp
+			GroupTodoInput,
+			GroupTodoList
 		},
 		data () {
 			return {
 				newTask: '',
 				tasks: [],
-				username: 'username',
-				password: 'password'
 			}
 		},
 		created: function() {
@@ -43,7 +36,7 @@
 		},
 		methods: {
 			getTask: function() {
-				axios.get('/todo-app/api/todo/', {headers: {'token':this.$cookies.get('todo_app')}})
+				axios.get('/todo-app/api/group_todo/' + this.$route.params.group, {headers: {'token':this.$cookies.get('todo_app')}})
 				.then(response => {
 					return response.data
 				})
@@ -55,7 +48,7 @@
 				})
 			},
 			addTask: function() {
-				axios.post('/todo-app/api/create_todo/', {
+				axios.post('/todo-app/api/create_group_todo/' + this.$route.params.group, {
 					description: this.newTask, 
 					completed: false
 				},
@@ -75,7 +68,7 @@
 				})
 			},
 			updateTask: function(id, completed) {
-				axios.put('/todo-app/api/update_todo/', {
+				axios.put('/todo-app/api/update_group_todo/' + this.$route.params.group, {
 					_id: id,
 					completed: !completed
 				},
@@ -94,7 +87,7 @@
 				})
 			},
 			deleteTask: function(id) {	
-				axios.delete('/todo-app/api/delete_todo/', {
+				axios.delete('/todo-app/api/delete_group_todo/' + this.$route.params.group, {
 					data: {
 						_id: id,
 						token: this.$cookies.get('todo_app')

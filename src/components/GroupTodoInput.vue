@@ -2,7 +2,7 @@
 	<section class="section">
 		<div class="container is-fluid has-text-centered">
 			<label class="subtitle">
-				Please enter a new ToDo 
+				Enter a new Group Todo here
 				<div class="field is-grouped">
 					<input id="input" class="input is-medium" :value="newTask" @input="handleInput($event)" @keyup.enter="addTask()"/>
 					<button class="button is-info is is-medium" v-on:click="addTask()">ADD</button>	
@@ -14,7 +14,7 @@
 
 <script>
 	export default {
-		name: 'Input',
+		name: 'GroupTodoInput',
 		props: {
 			newTask: String,
 			addTask: Function,

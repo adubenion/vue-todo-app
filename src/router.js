@@ -8,12 +8,17 @@ import Todos from './views/Todos.vue'
 import Friends from './views/Friends.vue'
 import Groups from './views/Groups.vue'
 import Messages from './views/Messages.vue'
+import User from './views/User.vue'
+import Group from './views/Group.vue'
+import ErrorPage from './views/ErrorPage.vue'
 import axios from 'axios';
 axios.defaults.withCredentials = true
 
 Vue.use(VueRouter)
 Vue.use(VueCookies)
 
+
+let user
  const router = new VueRouter({
   routes: [
     {
@@ -44,6 +49,7 @@ Vue.use(VueCookies)
       path: '/friends',
       name: 'friends',
       component: Friends,
+      props: {username:'testing...'},
       meta: {
         requiresAuth: true
       }
@@ -73,6 +79,27 @@ Vue.use(VueCookies)
       path: '/sign-up',
       'name': 'sign-up',
       component: SignUp
+    },
+    {
+      path: '/user/:username',
+      name: 'user',
+      component: User,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/group/:group',
+      name: 'group',
+      component: Group,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: ErrorPage
     }
   ]
 })
@@ -87,15 +114,22 @@ router.beforeEach((to, from, next) => {
           },
         });
       } else {
-        axios.get('http://localhost:3000/auth')
+        axios.get('/todo-app/auth')
         .then((response) => {
-          if (!response.status > 200) {
+          if (!(response.status > 200)) {
             next()
+          } else {
+            next({
+          path: '/error',
+          query: {
+            redirect: to.fullPath,
+          },
+        })
           }
         }).catch(e => {
           console.log(e)
             next({
-              path: '/login',
+              path: '/error',
               query: {
                 redirect: to.fullPath,
               },

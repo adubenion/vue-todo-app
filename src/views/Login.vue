@@ -27,7 +27,7 @@
 				<div class="field is-grouped">
 					<div class="control">
 						<button class="button is-success is is-medium" v-on:click="handleLogin()">Login</button>
-						<p>Forgot password?</p>
+<!-- 						<p>Forgot password?</p> -->
 					</div>
 <!-- 					<div class="control">
 						<button class="button is-danger is-medium">Forgot Password</button>
@@ -45,7 +45,7 @@
 		name: 'Login',
 		props: {
 			loggedIn: Boolean,
-			user: String
+			currentUser: String
 		},
 		data() {
 			return{
@@ -59,15 +59,15 @@
 		methods: {
 			handleLogin: function () {
 				if (this.username != '' && this.password != '') {
-					axios.post('http://localhost:3000/login/do', {
+					axios.post('/todo-app/login/do', {
 						username: this.username,
 						password: this.password
 					}).then(response => {
-						return response.data.data
+						return response.data
 					}).then(data => {
-						if (data !== null) {
+						if (data !== null && data.status !== 'error') {
 							this.$cookies.set('todo_app', `${data.token}`, '1H')
-							this.username = data.user.username
+							this.username = this.username
 							this.$emit('welcome', this.username)
 							this.message = true
 							this.$emit('login', this.message)
