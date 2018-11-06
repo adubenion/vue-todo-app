@@ -50,11 +50,11 @@ $ touch .env
 ```
   * Open .env in your favorite text editor or IDE, and copy the following information:
 ```
-API_HOST= localhost
-API_PORT= <express.js port here>
-MONGO_DB_URI_DEV=mongodb://localhost:<mongodb port here>/todo-list
-SECRET_KEY= <dev secret key here for bcrypt>
-SALT_WORK_FACTOR= <favorite salt rounds here>
+API_HOST=localhost
+API_PORT=3000
+MONGO_DB_URI_DEV=mongodb://localhost:3030/todo-list
+SECRET_KEY=workHard
+SALT_WORK_FACTOR=15
 CORS_ORIGIN_DEV=http://localhost:8080
 ```
   * Open src/config/server.js and make sure that you see the following:
@@ -100,7 +100,7 @@ $ npm run serve
 
 * Fourth Tab:
 ```sh
-$ mongo --port <Your port here>
+$ mongo --port 3030
 ```
 
 At this point, the API, DB, and Vue instance should be up and running. You should also be conncted to the mongodb instance running on your computer. Happy Coding!
