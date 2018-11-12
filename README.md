@@ -9,7 +9,7 @@ _Just ToDo-It_ is a fullstack productivity application that allows users to mana
 ### Usage
 
 ##### Signing Up
-  * Navigate to https://aarondubenion.com/todo-app/
+  * Navigate to https://justtodoitapp.com/
   * Click the link on the message, _"Got an account? Login! If not, Sign up here!"_
   * Complete the signup form using the following constraints:
     * Email must be in valid format (ex. email@host.com) and **must be unique** (one account per email address)
